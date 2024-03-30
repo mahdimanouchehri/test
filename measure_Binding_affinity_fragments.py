@@ -40,13 +40,13 @@ for i in range(len(df)):
     AllChem.EmbedMolecule(mol)
 
     # Save the molecule to a PDB file
-    rdmolfiles.MolToPDBFile(mol, f"output{j}.pdb")
+    rdmolfiles.MolToPDBFile(mol, f"output{i}{j}.pdb")
 
-    
+
 
 #    df[f"binding_affinity_frag{j}"][i] = binding_affinity1
 
-    test_dock = docking.Docking('test', lig_pdb=f"output{j}.pdb", rec_pdb='data/rec.pdb')
+    test_dock = docking.Docking('test', lig_pdb=f"output{i}{j}.pdb", rec_pdb='data/rec.pdb')
     test_dock.prepare_ligand()
     test_dock.prepare_receptor()
 
@@ -63,6 +63,6 @@ for i in range(len(df)):
 
 df.to_csv("geom_multifrag_test_table_with_binding_affinity.csv")
 
-  
+
 
 
