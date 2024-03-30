@@ -33,13 +33,16 @@ for i in range(len(df)):
 
         if fragment not in fragments:
             mol = Chem.MolFromSmiles(fragment)
+            try:
+                # Add hydrogens to the molecule
+                mol = Chem.AddHs(mol)
 
-            # Add hydrogens to the molecule
-            mol = Chem.AddHs(mol)
-
-            # Generate 3D conformers
-            AllChem.EmbedMolecule(mol)
-
+                # Generate 3D conformers
+                AllChem.EmbedMolecule(mol)
+            except:
+                fragments[fragment] = 0
+                df.loc[i, f"binding_affinity_frag{j}"] = 0
+                continue
             # Save the molecule to a PDB file
             rdmolfiles.MolToPDBFile(mol, f"output{i}{j}.pdb")
 
