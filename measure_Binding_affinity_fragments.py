@@ -62,7 +62,8 @@ for i in range(len(df)):
         else:
             df.loc[i, f"binding_affinity_frag{j}"] = fragments[fragment]
         j += 1
-
+    if i % 200 == 0 :
+        df.to_csv("geom_multifrag_test_table_with_binding_affinity.csv")
 df.to_csv("geom_multifrag_test_table_with_binding_affinity.csv")
 
 
