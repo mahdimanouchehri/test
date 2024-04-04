@@ -13,7 +13,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import rdmolfiles
 import pandas as pd
-
+import subprocess
 
 df = pd.read_csv("geom_multifrag_test_table_with_binding_affinity.csv")
 
@@ -56,11 +56,15 @@ for i in range(201):
         test_dock = docking.Docking('test', lig_pdb= f"uuid{i}_fragment{j}.pdb", rec_pdb= 'data/rec.pdb')
         test_dock.prepare_ligand()
         test_dock.prepare_receptor()
+        out_pdb=f'/content/test/outputs_pdb/docked_uuid{i}_fragment{j}.pdb'
         test_dock.run_docking(out_pdb=f'/content/test/outputs_pdb/docked_uuid{i}_fragment{j}.pdb',
                                   num_modes=10,
                                   energy_range=10,
                                   exhaustiveness=16,
                                   dock_bin='smina')
         print(test_dock.affinity)
+        out_pdb = f'{out_pdb}.pdb'
+        out_sdf = f'{out_pdb}.sdf'
+        subprocess.run(f'obabel {out_pdb} -O {out_sdf} 2> /dev/null', shell=True)
 
     j += 1
