@@ -4,6 +4,7 @@ channels:
   - bioconda
   - hcc
 dependencies:
+  - time 
   - numpy
   - pdb_manip_py==1.3.10
   - os_command_py==1.1.0

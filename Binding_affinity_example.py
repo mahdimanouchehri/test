@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import time
+
 
 from pdb_manip_py import pdb_manip
 from docking_py import docking
@@ -27,13 +29,19 @@ test_dock.prepare_ligand()
 test_dock.prepare_receptor()
 
 
-test_dock.run_docking(out_pdb='test_dock.pdb',
-                      num_modes=10,
+print("start...")
+start = time.time()
+
+test_dock.run_docking(out_pdb='test_dock7.pdb',
+                      num_modes=2,
                       energy_range=10,
-                      exhaustiveness=16,
-                      dock_bin='smina')
+                      exhaustiveness=10,
+                      dock_bin='qvinaw')
 
 rmsd_list = test_dock.compute_dock_rmsd(test_dock.lig_pdbqt)
 
 print(rmsd_list)
 print(test_dock.affinity)
+
+end = time.time()
+print("measured time:", end - start)
