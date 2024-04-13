@@ -8,26 +8,26 @@ Original file is located at
 """
 
 
-
+i = 1000
 from pdb_manip_py import pdb_manip
 from docking_py import docking
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import rdmolfiles
-
+import subprocess
 # Create a Coor object
 coor_1hsg = pdb_manip.Coor()
 coor_1hsg.get_PDB('8X5Y', 'data/8X5Y.pdb')
 # Select res_name MK1
-lig_coor = coor_1hsg.select_part_dict(selec_dict={'res_name': ['MK1']})
-# Save the ligand coordinates
-lig_coor.write_pdb('data/lig.pdb')
+# lig_coor = coor_1hsg.select_part_dict(selec_dict={'res_name': ['MK1']})
+# # Save the ligand coordinates
+# lig_coor.write_pdb('data/lig.pdb')
 
-# Keep only the amino acids
-rec_coor = coor_1hsg.select_part_dict(selec_dict={'res_name': pdb_manip.PROTEIN_RES})
-rec_coor.write_pdb('data/rec.pdb')
+# # Keep only the amino acids
+# rec_coor = coor_1hsg.select_part_dict(selec_dict={'res_name': pdb_manip.PROTEIN_RES})
+# rec_coor.write_pdb('data/rec.pdb')
 
-molecule = "C/C=C/C=C\C(=O)Nc1cccc(C2=NO[C@]3(C2)C[C@@H](C(N)=O)N(C(=O)/C(C)=C/C)C3)c1"
+molecule = "O=c1ccoc2ccccc12"
 mol = Chem.MolFromSmiles(molecule)
 # Add hydrogens to the molecule
 mol = Chem.AddHs(mol)
@@ -37,12 +37,16 @@ AllChem.EmbedMolecule(mol)
 # Save the molecule to a PDB file
 rdmolfiles.MolToPDBFile(mol, f"output{i}.pdb")
 
-test_dock = docking.Docking('test', lig_pdb=f"output{i}.pdb", rec_pdb='data/rec.pdb')
+test_dock = docking.Docking('test', lig_pdb= f"output{i}.pdb", rec_pdb='data/rec.pdb')
 test_dock.prepare_ligand()
 test_dock.prepare_receptor()
 
-test_dock.run_docking(out_pdb='test_dock7.pdb',
-                  num_modes=2,
+test_dock.run_docking(out_pdb= f'test_dock{i}.pdb',
+                  num_modes=5,
                   energy_range=10,
                   exhaustiveness=10,
-                  dock_bin='qvinaw')
+                  dock_bin='smina')
+
+out_pdb = f'test_dock{i}.pdb'
+out_sdf = f'test_dock{i}.sdf'
+subprocess.run(f'obabel {out_pdb} -O {out_sdf} 2> /dev/null', shell=True)
