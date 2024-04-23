@@ -27,14 +27,7 @@ def create_dataframe(*args):
   return df
 
 df = create_dataframe("idx", "BA protein1", "BA protein2")
-# Create a Coor object
-coor_1hsg = pdb_manip.Coor()
-coor_1hsg.get_PDB('8X5Y', 'data/8X5Y.pdb')
-
 pr_list = ["8X5Y", "1JQE"]
-# Keep only the amino acids
-rec_coor = coor_1hsg.select_part_dict(selec_dict={'res_name': pdb_manip.PROTEIN_RES})
-rec_coor.write_pdb('data/rec.pdb')
 
 dir_path = "/content/test/pdb_file/folder_1"
 for ligand_path in os.listdir(dir_path):
@@ -50,7 +43,7 @@ for ligand_path in os.listdir(dir_path):
       rec_coor= coor_1hsg.select_part_dict(selec_dict={'res_name': pdb_manip.PROTEIN_RES})
       rec_coor.write_pdb(f'data/rec_{protein}.pdb')
 
-      test_dock = docking.Docking('test', lig_pdb= f"{dir_path}/{ligand_path}", rec_pdb= 'data/rec.pdb')
+      test_dock = docking.Docking('test', lig_pdb= f"{dir_path}/{ligand_path}", rec_pdb= f'data/rec_{protein}.pdb')
       test_dock.prepare_ligand()
       test_dock.prepare_receptor()
       test_dock.run_docking(out_pdb=f'results/{ligand_name}_{protein}.pdb',
