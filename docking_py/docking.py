@@ -17,7 +17,7 @@ from pdb_manip_py import pdb_manip
 
 # Logging
 logger = logging.getLogger(__name__)
-
+#logger.disabled = True
 
 def set_log_level(level=logging.INFO):
     """
