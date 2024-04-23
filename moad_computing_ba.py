@@ -14,7 +14,8 @@ from rdkit.Chem import AllChem
 from rdkit.Chem import rdmolfiles
 import pandas as pd
 import subprocess
-
+import glob
+import os
 def create_dataframe(*args):
   # input column name
   # dictionary of lists
@@ -35,26 +36,30 @@ pr_list = ["8X5Y", "1JQE"]
 rec_coor = coor_1hsg.select_part_dict(selec_dict={'res_name': pdb_manip.PROTEIN_RES})
 rec_coor.write_pdb('data/rec.pdb')
 
-for ligand_path in glob.glob("pdb_file/folder_1/*"):
-  save_inf= []
-  ligand_name = os.path.splitext(os.path.basename(ligand_path))[0]
-  save_inf.append(ligand_name)
-  for protein in pr_list :
-    coor_1hsg= pdb_manip.Coor()
-    coor_1hsg.get_PDB(f'{protein}', f'data/{protein}.pdb')
+dir_path = "/content/test/pdb_file/folder_1"
+for ligand_path in os.listdir(dir_path):
+  if ligand_path.endswith('.pdb'):
+    save_inf= []
+    ligand_name = os.path.splitext(os.path.basename(ligand_path))[0]
+    save_inf.append(ligand_name)
+    for protein in pr_list :
+      coor_1hsg= pdb_manip.Coor()
+      coor_1hsg.get_PDB(f'{protein}', f'data/{protein}.pdb')
 
-    # Keep only the amino acids
-    rec_coor= coor_1hsg.select_part_dict(selec_dict={'res_name': pdb_manip.PROTEIN_RES})
-    rec_coor.write_pdb(f'data/rec_{protein}.pdb')
+      # Keep only the amino acids
+      rec_coor= coor_1hsg.select_part_dict(selec_dict={'res_name': pdb_manip.PROTEIN_RES})
+      rec_coor.write_pdb(f'data/rec_{protein}.pdb')
 
-    test_dock = docking.Docking('test', lig_pdb= ligand_path, rec_pdb= 'data/rec.pdb')
-    test_dock.prepare_ligand()
-    test_dock.prepare_receptor()
-    test_dock.run_docking(out_pdb=f'results/{ligand_name}_{protein}.pdb',
-                          num_modes=3,
-                          energy_range=10,
-                          exhaustiveness=16,
-                          dock_bin='smina')
-    print(test_dock.affinity)
-    save_inf.append(test_dock.affinity[1]["affinity"])
-  df.loc[len(df.index)] = save_inf
+      test_dock = docking.Docking('test', lig_pdb= f"{dir_path}/{ligand_path}", rec_pdb= 'data/rec.pdb')
+      test_dock.prepare_ligand()
+      test_dock.prepare_receptor()
+      test_dock.run_docking(out_pdb=f'results/{ligand_name}_{protein}.pdb',
+                            num_modes=10,
+                            energy_range=10,
+                            exhaustiveness=16,
+                            dock_bin='smina')
+      print(test_dock.affinity)
+      save_inf.append(test_dock.affinity[1]["affinity"])
+    df.loc[len(df.index)] = save_inf
+
+df.to_csv("folder_1_result.csv")
