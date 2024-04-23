@@ -55,11 +55,11 @@ for ligand_path in os.listdir(dir_path):
       test_dock.prepare_receptor()
       test_dock.run_docking(out_pdb=f'results/{ligand_name}_{protein}.pdb',
                             num_modes=10,
-                            energy_range=10,
+                            energy_range=5,
                             exhaustiveness=16,
                             dock_bin='smina')
       print(test_dock.affinity)
       save_inf.append(test_dock.affinity[1]["affinity"])
     df.loc[len(df.index)] = save_inf
 
-df.to_csv("folder_1_result.csv")
+df.to_csv("folder_1_result.csv")  
