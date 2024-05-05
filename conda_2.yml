@@ -1,9 +1,17 @@
-name: docking
+name: difflinker
 channels:
   - conda-forge
   - bioconda
   - hcc
+  - bioconda
+  - pyg
+  - pytorch
+  - anaconda
+  - defaults
+  - schrodinger
+  - openbabel
 dependencies:
+  - pdb_manip_py   
   - time 
   - numpy
   - pdb_manip_py==1.3.10
@@ -16,4 +24,10 @@ dependencies:
   - autodock
   - autogrid==4.2.6
   - pytest
+  - openbabel
+  - glob
+  - pandas=1.4.2=py310h769672d_1
+  - rdkit=2022.03.2=py310h1c297d8_0
   - pip
+
+	
