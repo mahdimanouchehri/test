@@ -17,7 +17,7 @@ from pdb_manip_py import pdb_manip
 
 # Logging
 logger = logging.getLogger(__name__)
-#logger.disabled = True
+logger.disabled = True
 
 def set_log_level(level=logging.INFO):
     """
@@ -472,7 +472,7 @@ class Docking:
                                       "-B", 'none',
                                       "-A", 'hydrogens',
                                       "-o", basename_pdbqt] + option)
-        cmd_lig.display()
+        #cmd_lig.display()
         cmd_lig.run()
 
         if os.path.abspath(lig_pdbqt) != os.path.abspath(basename_pdbqt):
@@ -1363,7 +1363,7 @@ selec_dict={'res_name': pdb_manip.PROTEIN_RES})
                                        "--exhaustiveness", str(exhaustiveness),
                                        "--energy_range", str(energy_range),
                                        "--out", out_pdb] + option)
-        cmd_dock.display()
+        #cmd_dock.display()
         cmd_dock.run()
 
         self.dock_pdb = out_pdb
