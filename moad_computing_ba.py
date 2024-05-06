@@ -34,7 +34,7 @@ pr_list = ["8X5Y", "1JQE"]
 
 import os
 
-dir_path = "/content/drive/MyDrive/These/GNN_raw_data"
+dir_path = "/content/drive/MyDrive/thesis/GNN_raw_data"
 for index_path in os.listdir(dir_path):
     full_path = os.path.join(dir_path, index_path)
     lock_file = f"{full_path}/{index_path}.lock"
