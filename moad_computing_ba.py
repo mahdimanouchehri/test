@@ -29,7 +29,7 @@ def create_dataframe(*args):
 df = create_dataframe("idx", "BA protein1", "BA protein2")
 pr_list = ["8X5Y", "1JQE"]
 
-dir_path = "/content/test/pdb_file/folder_1"
+dir_path = "/content/drive/MyDrive/These/GNN_raw_data/batch_0"
 for ligand_path in os.listdir(dir_path):
   if ligand_path.endswith('.pdb'):
     save_inf= []
@@ -46,13 +46,17 @@ for ligand_path in os.listdir(dir_path):
       test_dock = docking.Docking('test', lig_pdb= f"{dir_path}/{ligand_path}", rec_pdb= f'data/rec_{protein}.pdb')
       test_dock.prepare_ligand()
       test_dock.prepare_receptor()
-      test_dock.run_docking(out_pdb=f'results/{ligand_name}_{protein}.pdb',
+      try :
+        test_dock.run_docking(out_pdb=f'results/{ligand_name}_{protein}.pdb',
                             num_modes=10,
                             energy_range=5,
                             exhaustiveness=16,
                             dock_bin='smina')
-      print(test_dock.affinity)
-      save_inf.append(test_dock.affinity[1]["affinity"])
+        print(test_dock.affinity)
+        save_inf.append(test_dock.affinity[1]["affinity"])
+      except:
+        save_inf.append(0)
+
     df.loc[len(df.index)] = save_inf
 
-df.to_csv("folder_1_result.csv")  
+    df.to_csv("drive/MyDrive/These/GNN_raw_data/batch_0/folder_1_result.csv")
