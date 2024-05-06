@@ -29,13 +29,14 @@ def create_dataframe(*args):
     return df
 
 
-df = create_dataframe("idx", "BA protein1", "BA protein2")
+
 pr_list = ["8X5Y", "1JQE"]
 
 import os
 
 dir_path = "/content/drive/MyDrive/thesis/GNN_raw_data"
 for index_path in os.listdir(dir_path):
+    df = create_dataframe("idx", "BA protein1", "BA protein2")
     full_path = os.path.join(dir_path, index_path)
     lock_file = f"{full_path}/{index_path}.lock"
     # Check if the file already exists
@@ -56,18 +57,18 @@ for index_path in os.listdir(dir_path):
             save_inf.append(ligand_name)
             for protein in pr_list:
                 coor_1hsg = pdb_manip.Coor()
-                coor_1hsg.get_PDB(f'{protein}', f'data/{protein}.pdb')
+                coor_1hsg.get_PDB(f'{protein}', f'/content/data/{protein}.pdb')
 
                 # Keep only the amino acids
                 rec_coor = coor_1hsg.select_part_dict(selec_dict={'res_name': pdb_manip.PROTEIN_RES})
-                rec_coor.write_pdb(f'data/rec_{protein}.pdb')
+                rec_coor.write_pdb(f'/content/data/rec_{protein}.pdb')
 
                 test_dock = docking.Docking('test', lig_pdb=f"{full_path}/{ligand_path}",
-                                            rec_pdb=f'data/rec_{protein}.pdb')
+                                            rec_pdb=f'/content/data/rec_{protein}.pdb')
                 try:
                     test_dock.prepare_ligand()
                     test_dock.prepare_receptor()
-                    test_dock.run_docking(out_pdb=f'results/{ligand_name}_{protein}.pdb',
+                    test_dock.run_docking(out_pdb=f'/content/results/{ligand_name}_{protein}.pdb',
                                           num_modes=3,
                                           energy_range=5,
                                           exhaustiveness=8,
