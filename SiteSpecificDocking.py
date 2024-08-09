@@ -53,64 +53,65 @@ else :
   df = create_dataframe("idx", "BA protein1", "BA protein2")
       
 for ligand_path in os.listdir(dir_path):
-  number = int(ligand_path.split(".")[0].split("_")[-1])
-  if int(args.range_[0]) <= number <= int(args.range_[1]):
-
-      ligand_full_path = os.path.join(dir_path, ligand_path)
-
-
-      print(f"working on {ligand_path}")
-
-      save_inf = []
-      ligand_name = os.path.splitext(os.path.basename(ligand_path))[0]
-      if df['idx'].eq(ligand_name).any():
-        continue
-
-      save_inf.append(ligand_name)
-      for protein in pr_list:
-          coor_1hsg = pdb_manip.Coor()
-          coor_1hsg.get_PDB(f'{protein}', f'/content/data/{protein}.pdb')
-
-          # Keep only the amino acids
-          rec_coor = coor_1hsg.select_part_dict(selec_dict={'res_name': pdb_manip.PROTEIN_RES})
-          rec_coor.write_pdb(f'/content/data/rec_{protein}.pdb')
-
-          test_dock = docking.Docking('test', lig_pdb = ligand_full_path,
-                                      rec_pdb=f'/content/data/rec_{protein}.pdb')
-          try:
-              test_dock.prepare_ligand()
-              test_dock.prepare_receptor()
-
-              if protein == "8X5Y":
+  if ligand_path.endswith('.pdb'):
+      number = int(ligand_path.split(".")[0].split("_")[-1])
+      if int(args.range_[0]) <= number <= int(args.range_[1]):
+    
+          ligand_full_path = os.path.join(dir_path, ligand_path)
+    
+    
+          print(f"working on {ligand_path}")
+    
+          save_inf = []
+          ligand_name = os.path.splitext(os.path.basename(ligand_path))[0]
+          if df['idx'].eq(ligand_name).any():
+            continue
+    
+          save_inf.append(ligand_name)
+          for protein in pr_list:
+              coor_1hsg = pdb_manip.Coor()
+              coor_1hsg.get_PDB(f'{protein}', f'/content/data/{protein}.pdb')
+    
+              # Keep only the amino acids
+              rec_coor = coor_1hsg.select_part_dict(selec_dict={'res_name': pdb_manip.PROTEIN_RES})
+              rec_coor.write_pdb(f'/content/data/rec_{protein}.pdb')
+    
+              test_dock = docking.Docking('test', lig_pdb = ligand_full_path,
+                                          rec_pdb=f'/content/data/rec_{protein}.pdb')
+              try:
+                  test_dock.prepare_ligand()
+                  test_dock.prepare_receptor()
+    
+                  if protein == "8X5Y":
+                      
+                      test_dock.run_docking(out_pdb=f'/content/results/{ligand_name}_{protein}.pdb',
+                                            num_modes=10,
+                                            energy_range=10,
+                                            exhaustiveness=16,
+                                            center = [179.588, 168.953, 139.044],
+                                            grid_size = [15.9431, 17.6008 , 19.333],
+                                            dock_bin='vina')
+                      # print(test_dock.affinity)
+                      save_inf.append(test_dock.affinity[1]["affinity"])
                   
-                  test_dock.run_docking(out_pdb=f'/content/results/{ligand_name}_{protein}.pdb',
-                                        num_modes=10,
-                                        energy_range=10,
-                                        exhaustiveness=16,
-                                        center = [179.588, 168.953, 139.044],
-                                        grid_size = [15.9431, 17.6008 , 19.333],
-                                        dock_bin='vina')
-                  # print(test_dock.affinity)
-                  save_inf.append(test_dock.affinity[1]["affinity"])
+                  elif  protein == "7F61" : 
+                      test_dock.run_docking(out_pdb=f'/content/results/{ligand_name}_{protein}.pdb',
+                                            num_modes=10,
+                                            energy_range=10,
+                                            exhaustiveness=16,
+                                            center = [-20.4788, 51.5489, -1.5676],
+                                            grid_size = [19.1285, 21.0051 , 22.772],
+                                            dock_bin='vina')
+                      # print(test_dock.affinity)
+                      save_inf.append(test_dock.affinity[1]["affinity"])
+    
+                  else : 
+                      print("protein name not exite")  
               
-              elif  protein == "7F61" : 
-                  test_dock.run_docking(out_pdb=f'/content/results/{ligand_name}_{protein}.pdb',
-                                        num_modes=10,
-                                        energy_range=10,
-                                        exhaustiveness=16,
-                                        center = [-20.4788, 51.5489, -1.5676],
-                                        grid_size = [19.1285, 21.0051 , 22.772],
-                                        dock_bin='vina')
-                  # print(test_dock.affinity)
-                  save_inf.append(test_dock.affinity[1]["affinity"])
-
-              else : 
-                  print("protein name not exite")  
-          
-          except:
-              save_inf.append(0)
-
-      df.loc[len(df.index)] = save_inf
+              except:
+                  save_inf.append(0)
+    
+          df.loc[len(df.index)] = save_inf
 
 df.to_csv(result_path)
 
