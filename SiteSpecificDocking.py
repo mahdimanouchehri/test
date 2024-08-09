@@ -53,7 +53,7 @@ else :
   df = create_dataframe("idx", "BA protein1", "BA protein2")
       
 for ligand_path in os.listdir(dir_path):
-  number += 1
+  number = int(ligand_path.split(".")[0].split("_")[-1])
   if int(args.range_[0]) <= number <= int(args.range_[1]):
 
       ligand_full_path = os.path.join(dir_path, ligand_path)
