@@ -117,6 +117,6 @@ for ligand_path in os.listdir(dir_path):
                   save_inf.append(0)
     
           df.loc[len(df.index)] = save_inf
-          if number % 10 == 0 :
+          if number % 5 == 0 :
             df.to_csv(result_path)
 df.to_csv(result_path)
