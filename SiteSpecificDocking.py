@@ -50,10 +50,12 @@ result_path = f"/content/drive/MyDrive/Ground_truth_docking/SiteSpecific_{args.r
 if os.path.exists(result_path):
   print("csv file already exsite")
   df = pd.read_csv(result_path)
+  df = df[["idx", "BA protein1", "BA protein2"]]
 
 else :
   print("csv file create") 
   df = create_dataframe("idx", "BA protein1", "BA protein2")
+
       
 for ligand_path in os.listdir(dir_path):
   if ligand_path.endswith('.pdb'):
