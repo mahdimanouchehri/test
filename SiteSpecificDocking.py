@@ -92,7 +92,7 @@ for ligand_path in os.listdir(dir_path):
                       test_dock.run_docking(out_pdb=f'/content/results/{ligand_name}_{protein}.pdb',
                                             num_modes=10,
                                             energy_range=10,
-                                            exhaustiveness=16,
+                                            exhaustiveness=8,
                                             center = [179.588, 168.953, 139.044],
                                             grid_size = [15.9431, 17.6008 , 19.333],
                                             dock_bin='vina')
@@ -103,7 +103,7 @@ for ligand_path in os.listdir(dir_path):
                       test_dock.run_docking(out_pdb=f'/content/results/{ligand_name}_{protein}.pdb',
                                             num_modes=10,
                                             energy_range=10,
-                                            exhaustiveness=16,
+                                            exhaustiveness=8,
                                             center = [-20.4788, 51.5489, -1.5676],
                                             grid_size = [19.1285, 21.0051 , 22.772],
                                             dock_bin='vina')
