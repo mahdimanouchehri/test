@@ -48,8 +48,11 @@ number = -1
 result_path = f"/content/drive/MyDrive/Ground_truth_docking/SiteSpecific_{args.range_[0]}_{args.range_[1]}.csv"
 # Check if the file already exists
 if os.path.exists(result_path):
+  print("csv file already exsite")
   df = pd.read_csv(result_path)
-else : 
+
+else :
+  print("csv file create") 
   df = create_dataframe("idx", "BA protein1", "BA protein2")
       
 for ligand_path in os.listdir(dir_path):
@@ -112,6 +115,6 @@ for ligand_path in os.listdir(dir_path):
                   save_inf.append(0)
     
           df.loc[len(df.index)] = save_inf
-
+          if number % 10 == 0 :
+            df.to_csv(result_path)
 df.to_csv(result_path)
-
